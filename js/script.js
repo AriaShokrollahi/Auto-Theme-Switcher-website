@@ -1,31 +1,22 @@
 // =====================================================================
 // Put your own GitHub repository link here (used by every Download / GitHub button)
 // =====================================================================
-var REPO = "https://github.com/AriaShokrollahi/Auto-Theme-Switcher";
+var REPO = "https://github.com/YOUR-USERNAME/auto-theme-switcher";
 
 (function () {
   var d = document, r = d.documentElement, $ = function (s) { return d.querySelector(s); };
   [].forEach.call(d.querySelectorAll("[data-dl]"), function (a) { a.href = REPO + "/releases/latest"; });
   [].forEach.call(d.querySelectorAll("[data-repo]"), function (a) { a.href = REPO; });
 
-  // The site follows the demo schedule: light 07:00-19:00, dark otherwise.
-  function scheduledTheme() {
-    var hour = new Date().getHours();
-    return hour >= 7 && hour < 19 ? "light" : "dark";
-  }
-  var activeSchedule = scheduledTheme();
-  r.dataset.theme = activeSchedule;
+  // site theme: follows the system, remembers a manual choice
+  var key = "ats-theme", mq = matchMedia("(prefers-color-scheme: dark)"), s = null;
+  try { s = localStorage.getItem(key); } catch (e) {}
+  r.dataset.theme = s || (mq.matches ? "dark" : "light");
   $("#th").onclick = function () {
     var n = r.dataset.theme === "dark" ? "light" : "dark";
     r.dataset.theme = n;
+    try { localStorage.setItem(key, n); } catch (e) {}
   };
-  setInterval(function () {
-    var next = scheduledTheme();
-    if (next !== activeSchedule) {
-      activeSchedule = next;
-      r.dataset.theme = next;
-    }
-  }, 30000);
 
   function ticks(n, r1, r2, cls, big) {
     var o = "", i, a;
