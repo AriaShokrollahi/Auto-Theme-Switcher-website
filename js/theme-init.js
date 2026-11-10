@@ -1,8 +1,5 @@
-// Runs before the page is drawn: applies the saved light/dark choice so there is no flash.
-// (If nothing was saved, the CSS follows the system theme on its own.)
+// Apply the scheduled theme before the page is drawn to avoid a flash.
 (function () {
-  try {
-    var saved = localStorage.getItem("ats-theme");
-    if (saved === "light" || saved === "dark") document.documentElement.setAttribute("data-theme", saved);
-  } catch (e) { }
+  var hour = new Date().getHours();
+  document.documentElement.setAttribute("data-theme", hour >= 7 && hour < 19 ? "light" : "dark");
 })();
